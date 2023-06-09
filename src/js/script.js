@@ -13,6 +13,9 @@
     book: {
       image: '.book__image',
     },
+    form: {
+      filters: '.filters',
+    },
   };
 
   const classNames = {
@@ -22,9 +25,14 @@
   };
 
   const templatesBooks = Handlebars.compile(document.querySelector(select.templateOf.book).innerHTML);
-  const booksContainer = document.querySelector(select.containerOf.books);
+  
+  const books = {
+    container: document.querySelector(select.containerOf.books),
+    filter: document.querySelector(select.form.filters),
+  };
 
   const favoriteBooks = [];
+  const filters = [];
 
   /**
    * Function for rendering books on the page.
@@ -35,33 +43,38 @@
     for(const element of dataSource.books){
       const generatedHTML = templatesBooks(element);
       const elementDOM = utils.createDOMFromHTML(generatedHTML);
-      booksContainer.appendChild(elementDOM);
+      books.container.appendChild(elementDOM);
     }
   };
 
   /**
-   * Function to add and remove book from favorites
+   * Function to add and remove book from favorites and filtred it
    */
   const initActions = function(){
-    const books = booksContainer.getElementsByTagName('li');
-    for(let i = 0; i < books.length; ++i){
-      books[i].addEventListener('dblclick', function(event) {
-        event.preventDefault();
-        const bookId = event.target.offsetParent.getAttribute('data-id');
+    books.container.addEventListener('dblclick', function(event) {
+      event.preventDefault();
+      const bookId = event.target.offsetParent.getAttribute('data-id');
 
-        if(!favoriteBooks.includes(bookId)){
-          event.target.offsetParent.classList.add(classNames.books.favorite);
-          favoriteBooks.push(bookId);
+      if(!favoriteBooks.includes(bookId)){
+        event.target.offsetParent.classList.add(classNames.books.favorite);
+        favoriteBooks.push(bookId);
+      } else {
+        event.target.offsetParent.classList.remove(classNames.books.favorite);
+        favoriteBooks.pop(bookId);
+      }
+    });
+
+    books.filter.addEventListener('click', function(event){
+      if(event.target.tagName == 'INPUT' && event.target.type == 'checkbox' && event.target.name == 'filter'){
+        if(event.target.checked){
+          filters.push(event.target.value);
         } else {
-          event.target.offsetParent.classList.remove(classNames.books.favorite);
-          favoriteBooks.pop(bookId);
+          filters.pop(event.target.value);
         }
-      });
-    }
-      
+      }
+    });
   };
 
   renderBooks();
   initActions();
-  console.log(favoriteBooks);
 }
