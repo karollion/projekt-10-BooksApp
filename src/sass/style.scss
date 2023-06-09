@@ -1,3 +1,8 @@
+body {
+  background: cornflowerblue;
+  color: beige;
+}
+
 ul {
   list-style-type: none;
   margin: 0;
@@ -69,6 +74,7 @@ figure {
     width: 80%;
     margin: 0 auto;
     background: #eee;
+    color: black;
     border-radius: 10px;
     overflow: hidden;
 
