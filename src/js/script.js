@@ -39,17 +39,23 @@
     }
   };
 
+  /**
+   * Function to add and remove book from favorites
+   */
   const initActions = function(){
-    console.log(booksContainer);
     const books = booksContainer.getElementsByTagName('li');
     for(let i = 0; i < books.length; ++i){
-      console.log(books[i]);
       books[i].addEventListener('dblclick', function(event) {
         event.preventDefault();
         const bookId = event.target.offsetParent.getAttribute('data-id');
-        event.target.offsetParent.classList.add(classNames.books.favorite);
-        favoriteBooks.push(bookId);
-        console.log(favoriteBooks);
+
+        if(!favoriteBooks.includes(bookId)){
+          event.target.offsetParent.classList.add(classNames.books.favorite);
+          favoriteBooks.push(bookId);
+        } else {
+          event.target.offsetParent.classList.remove(classNames.books.favorite);
+          favoriteBooks.pop(bookId);
+        }
       });
     }
       
